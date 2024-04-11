@@ -1,5 +1,5 @@
 ﻿namespace infrastructure;
-public class Utilities
+public static class Utilities
 {
     private static readonly Uri Uri = new Uri(Environment.GetEnvironmentVariable("pgconn")!);
     
