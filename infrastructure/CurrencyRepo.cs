@@ -3,7 +3,7 @@ using Dapper;
 using infrastructure.Models;
 using MySqlConnector;
 
-namespace Infrastructure;
+namespace infrastructure;
 
 public class CurrencyRepo
 {

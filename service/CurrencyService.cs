@@ -1,7 +1,7 @@
-﻿using Infrastructure;
+﻿using infrastructure;
 using infrastructure.Models;
 
-namespace Service;
+namespace service;
 
 public class CurrencyService
 {

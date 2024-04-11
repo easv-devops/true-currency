@@ -1,10 +1,9 @@
-﻿using Api;
+﻿using api;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using infrastructure;
-using Infrastructure;
 using infrastructure.Models;
-using Service;
+using service;
 
 namespace tests
 {
