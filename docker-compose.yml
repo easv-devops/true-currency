@@ -1,11 +1,4 @@
 services:
-  currency-frontend:
-    image: midr/true-currency-frontend-2:staging
-    ports:
-      - "5001:8080"
-    labels:
-      - "com.centurylinklabs.watchtower.enable=true"
-    tty: true
   
   currency-api:
     image: midr/true-currency-api-2:staging
