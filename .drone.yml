@@ -2,6 +2,12 @@ kind: pipeline
 type: docker
 name: integration
 
+trigger: 
+  branch:
+    - master
+  event:
+    exclude:
+      - pull_request
 steps:
   - name: code-analysis
     image: boulundeasv/dotnet-sdk-with-java
@@ -9,7 +15,6 @@ steps:
       SONARSECRET:
         from_secret: SonarQubeSecret
     commands:
-      #- exit 0
       - dotnet sonarscanner begin 
           /k:"easv-devops_true-currency_AY7MMu9tEVvRW2O60EmC" 
           /d:sonar.host.url="http://sonar.setgo.dk:9000" 
@@ -25,6 +30,12 @@ steps:
 kind: pipeline
 type: docker
 name: deliver
+trigger:
+  branch:
+    - master
+  event:
+    exclude:
+      - pull_request
 depends_on:
   - integration
 
@@ -37,7 +48,7 @@ steps:
       password:
         from_secret: DockerPassword
       dockerfile: api/Dockerfile
-      repo: midr/true-currency-api-2
+      repo: midr/true-currency-api
       tags:
         - staging
 
@@ -49,7 +60,7 @@ steps:
       password:
         from_secret: DockerPassword
       dockerfile: frontend/Dockerfile
-      repo: midr/true-currency-frontend-2
+      repo: midr/true-currency-frontend
       tags:
         - staging
   

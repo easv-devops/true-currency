@@ -3,7 +3,7 @@ services:
     build: 
       context: .
       dockerfile: frontend/Dockerfile
-    image: midr/true-currency-frontend-2:staging
+    image: midr/true-currency-frontend:staging
     ports:
       - "5001:80"
     labels:
@@ -13,7 +13,7 @@ services:
       - currency-api
   
   currency-api:
-    image: midr/true-currency-api-2:staging
+    image: midr/true-currency-api:staging
     ports:
       - "5002:8080"
     depends_on:
