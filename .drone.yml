@@ -5,7 +5,9 @@ name: integration
 trigger: 
   branch:
     - master
-
+  event:
+    exclude:
+      - pull_request
 steps:
   - name: code-analysis
     image: boulundeasv/dotnet-sdk-with-java
@@ -31,6 +33,9 @@ name: deliver
 trigger:
   branch:
     - master
+  event:
+    exclude:
+      - pull_request
 depends_on:
   - integration
 
