@@ -41,6 +41,18 @@ steps:
       tags:
         - staging
 
+  - name: publish web
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: DockerUsername
+      password:
+        from_secret: DockerPassword
+      dockerfile: frontend/Dockerfile
+      repo: midr/true-currency-frontend-2
+      tags:
+        - staging
+  
   - name: trigger update
     image: curlimages/curl
     commands:
