@@ -1,21 +1,38 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
-  </ion-toolbar>
-</ion-header>
-
 <ion-content [fullscreen]="true">
   <ion-header collapse="condense">
     <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
+      <ion-title size="large">Currency Converter</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div id="container">
-    <strong>I think it works boys!</strong>
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+  <h1 style="text-align: center">Currency Converter</h1>
+  <div style="display: flex; justify-content: center; align-items: flex-end">
+    <ion-item style="display: flex; align-items: flex-end;">
+      <ion-list style="width: 150px;">
+        <h2>Source</h2>
+        <ion-select>
+          <ion-select-option>
+            <!-- *ngFor der loader alle currencies -->
+          </ion-select-option>
+        </ion-select>
+      </ion-list>
+
+      <ion-list style="width: 150px;">
+        <h4>Target</h4>
+        <ion-select>
+          <ion-select-option>
+            <!-- *ngFor der loader alle currencies -->
+          </ion-select-option>
+        </ion-select>
+      </ion-list>
+
+      <ion-list style="width: 150px;">
+        <h4>Value</h4>
+        <ion-input type="number"></ion-input>
+      </ion-list>
+
+      <ion-button style="width: 100px; height: 50px; align-items: flex-end">Convert</ion-button>
+    </ion-item>
   </div>
+  <h2 style="text-align: center">100 EUR is 107,53 USD</h2>
 </ion-content>
