@@ -17,7 +17,7 @@ public class CurrencyController: ControllerBase
     }
     
     [HttpGet]
-    [Route("currency")]
+    [Route("GetAll")]
     public List<Currency> Get()
     {
         return _service.GetAllCurrencies();
