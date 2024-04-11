@@ -1,0 +1,5 @@
+CREATE TABLE Currency (
+    iso VARCHAR(5) PRIMARY KEY,
+    value DECIMAL NOT NULL
+);
+

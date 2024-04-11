@@ -1,0 +1,1 @@
+ALTER TABLE Currency MODIFY COLUMN value DECIMAL(10, 2);

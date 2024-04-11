@@ -1,0 +1,69 @@
+kind: pipeline
+type: docker
+name: integration
+
+steps:
+  - name: code-analysis
+    image: boulundeasv/dotnet-sdk-with-java
+    environment:
+      SONARSECRET:
+        from_secret: SonarQubeSecret
+    commands:
+      - exit 0
+      - dotnet sonarscanner begin 
+          /k:"easv-devops_True_DevOps_AY7CDRyyEVvRW2O60Efz" 
+          /d:sonar.host.url="http://sonar.setgo.dk:9000" 
+          /d:sonar.token="$SONARSECRET"
+          /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
+          /d:sonar.qualitygate.wait=true
+      - dotnet build Api/Api.csproj --no-incremental
+      - dotnet-coverage collect "dotnet test Tests/Tests.csproj" -f xml -o "coverage.xml"
+      - dotnet sonarscanner end /d:sonar.token="$SONARSECRET"
+
+---
+
+kind: pipeline
+type: docker
+name: deliver
+depends_on:
+  - integration
+
+steps:
+  - name: publish api
+    image: plugins/docker
+    settings:
+      username:
+        from_secret: DockerUsername
+      password:
+        from_secret: DockerPassword
+      dockerfile: api/Dockerfile
+      repo: midr/true-currency-api-2
+      tags:
+        - staging
+
+  - name: trigger update
+    image: curlimages/curl
+    commands:
+      # Must match the token defined in docker-compose.yml
+      - "curl --fail -X GET 'http://4.231.252.47:8080/v1/update' -H 'Authorization: Bearer mytoken'"
+      - sleep 10
+    depends_on:
+      - publish api
+
+  - name: update database
+    image: flyway/flyway
+    commands:
+      - flyway migrate 
+          -url=jdbc:mariadb://4.231.252.47:3306/currencies 
+          -user=myuser 
+          -password=mypassword 
+          -locations=filesystem:./db/sql
+    depends_on:
+      - trigger update
+
+  - name: performance tests
+    image: grafana/k6
+    commands:
+      - k6 run tests/performance/spike.js
+    depends_on:
+      - update database
