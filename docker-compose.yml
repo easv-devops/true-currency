@@ -1,11 +1,16 @@
 services:
   currency-frontend:
+    build: 
+      context: .
+      dockerfile: frontend/Dockerfile
     image: midr/true-currency-frontend-2:staging
     ports:
-      - "5001:8080"
+      - "5001:80"
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     tty: true
+    depends_on:
+      - currency-api
   
   currency-api:
     image: midr/true-currency-api-2:staging
