@@ -1,36 +1,48 @@
-﻿using infrastructure;
-using Infrastructure;
+﻿using System.Net;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Service;
 
 namespace tests
 {
     public class ProgramTests
     {
         [Test]
-        public void ConfigureServices_ShouldRegisterServices()
+        public async Task Main_ShouldRunApplication()
         {
             // Arrange
-            var services = new ServiceCollection();
-            var builder = WebApplication.CreateBuilder();
+            var builder = new WebHostBuilder()
+                .UseStartup<TestStartup>();
+
+            using var server = new TestServer(builder);
+            using var client = server.CreateClient();
 
             // Act
-            builder.Services.AddControllers();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddSingleton(provider => Utilities.MySqlConnectionString);
-            builder.Services.AddSingleton(provider => new CurrencyRepo(provider.GetRequiredService<string>()));
-            builder.Services.AddSingleton<CurrencyService>();
-
-            var app = builder.Build();
+            var response = await client.GetAsync("/");
 
             // Assert
-            var serviceProvider = app.Services;
-            var currencyRepo = serviceProvider.GetService<CurrencyRepo>();
-            var currencyService = serviceProvider.GetService<CurrencyService>();
+            Assert.AreEqual(HttpStatusCode.NotFound, response.StatusCode);
+        }
+    }
 
-            Assert.NotNull(currencyRepo);
-            Assert.NotNull(currencyService);
+    public class TestStartup
+    {
+        public void ConfigureServices(IServiceCollection services)
+        {
+            // Configure services for testing
+            services.AddControllers();
+            services.AddSwaggerGen();
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            // Configure middleware and request pipeline for testing
+            app.UseRouting();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

@@ -1,6 +1,5 @@
 using infrastructure;
 using Infrastructure;
-using MySqlConnector;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,7 +9,6 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
-//testafpussh
 
 //saves connection string
 builder.Services.AddNpgsqlDataSource(Utilities.MySqlConnectionString, 
