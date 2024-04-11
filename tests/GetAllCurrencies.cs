@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using Api;
+using FluentAssertions;
 using FluentAssertions.Execution;
 using infrastructure;
 using Infrastructure;
@@ -11,21 +12,22 @@ namespace tests
     {
         private CurrencyRepo _currencyRepo;
         private CurrencyService _currencyService;
+        private CurrencyController _currencyController;
 
         [SetUp]
         public void Setup()
         {
+            // Arrange
             _currencyRepo = new CurrencyRepo(Utilities.MySqlConnectionString);
             _currencyService = new CurrencyService(_currencyRepo);
+            _currencyController = new CurrencyController(_currencyService);
         }
 
         [Test]
         public void GetAllCurrencies_ShouldReturnListOfCurrencies()
         {
-            // Arrange
-
             // Act
-            List<Currency> responseList = _currencyService.GetAllCurrencies();
+            List<Currency> responseList = _currencyController.Get();
 
             // Print out the full list
             Console.WriteLine("Full list of currencies:");
