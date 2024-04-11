@@ -3,7 +3,7 @@ services:
     build: 
       context: .
       dockerfile: frontend/Dockerfile
-    image: midr/true-currency-frontend-2:staging
+    image: midr/true-currency-frontend-3:staging
     ports:
       - "5001:80"
     labels:
