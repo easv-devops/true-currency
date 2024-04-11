@@ -6,7 +6,7 @@ namespace Service;
 public class CurrencyService
 {
 
-    private CurrencyRepo _repo;
+    private readonly CurrencyRepo _repo;
     
     public CurrencyService(CurrencyRepo repo)
     {

@@ -9,7 +9,7 @@ namespace Api;
 public class CurrencyController: ControllerBase
 {
 
-    private CurrencyService _service;
+    private readonly CurrencyService _service;
     
     public CurrencyController(CurrencyService service)
     {
