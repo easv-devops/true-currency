@@ -12,6 +12,18 @@ builder.Services.AddControllers();
 builder.Services.AddSwaggerGen();
 
 
+//saves connection string
+builder.Services.AddNpgsqlDataSource(Utilities.MySqlConnectionString, 
+    dataSourceBuilder => dataSourceBuilder.EnableParameterLogging());
+
+//gets connection string to db
+builder.Services.AddSingleton(provider => Utilities.MySqlConnectionString);
+
+
+builder.Services.AddSingleton(provider => new CurrencyRepo(provider.GetRequiredService<string>()));
+
+builder.Services.AddSingleton<CurrencyService>();
+
 
 var app = builder.Build();
 
@@ -25,23 +37,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-
-
-//saves connection string
-builder.Services.AddNpgsqlDataSource(Utilities.ProperlyFormattedConnectionString, 
-    dataSourceBuilder => dataSourceBuilder.EnableParameterLogging());
-
-//gets connection string to db
-builder.Services.AddSingleton(provider => Utilities.MySqlConnectionString);
-
-
-builder.Services.AddSingleton(provider => new CurrencyRepo(provider.GetRequiredService<string>()));
-
-builder.Services.AddSingleton<CurrencyService>();
+app.MapControllers();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

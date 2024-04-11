@@ -19,8 +19,7 @@ public class CurrencyRepo
         using (var connection = new MySqlConnection(_connectionString))
         {
             const string sql = @"
-SELECT Iso, Currency AS Valuta FROM Currency;";
-
+SELECT iso, value AS Valuta FROM Currency;";
             try
             {
                 connection.Open();

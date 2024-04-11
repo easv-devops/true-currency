@@ -13,5 +13,5 @@ public class Utilities
             Uri.Port > 0 ? Uri.Port : 5432);
     
     public static readonly string
-        MySqlConnectionString = "Server=127.0.0.1;Port=63306;Database=Blog;Uid=root;Pwd=example;";
+        MySqlConnectionString = "Server=4.231.252.47;Database=currencies;Uid=myuser;Pwd=mypassword;";
 }

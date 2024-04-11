@@ -4,6 +4,8 @@ using Service;
 
 namespace Api;
 
+[ApiController]
+[Route("[controller]")]
 public class CurrencyController: ControllerBase
 {
 
@@ -15,7 +17,7 @@ public class CurrencyController: ControllerBase
     }
     
     [HttpGet]
-    [Route("/currency")]
+    [Route("currency")]
     public List<Currency> Get()
     {
         return _service.GetAllCurrencies();
