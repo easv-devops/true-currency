@@ -48,7 +48,7 @@ steps:
         from_secret: DockerUsername
       password:
         from_secret: DockerPassword
-      dockerfile: api/Dockerfile
+      dockerfile: Dockerfile
       repo: midr/true-currency-api
       tags:
         - staging
