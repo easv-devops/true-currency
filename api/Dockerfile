@@ -11,7 +11,7 @@ COPY ["api/api.csproj", "api/"]
 RUN dotnet restore "api/api.csproj"
 COPY . .
 WORKDIR "/src/api"
-RUN dotnet build "api.csproj" -c $BUILD_CONFIGURATION -o /app/build
+RUN dotnet build "api.csproj" --no-incremental -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
 ARG BUILD_CONFIGURATION=Release
