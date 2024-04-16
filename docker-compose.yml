@@ -14,7 +14,7 @@ services:
   
   currency-api:
     image: midr/true-currency-api:staging
-    entrypoint: ["dotnet", "Api.dll"]
+    entrypoint: ["dotnet", "api.dll"]
     ports:
       - "5002:8080"
     depends_on:
