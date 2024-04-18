@@ -21,6 +21,17 @@ builder.Services.AddSingleton(provider => new CurrencyRepo(provider.GetRequiredS
 
 builder.Services.AddSingleton<CurrencyService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 
@@ -31,8 +42,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
-
+app.UseCors("AllowAll");
 
 app.MapControllers();
 
