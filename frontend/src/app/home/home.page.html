@@ -13,8 +13,10 @@
         <ion-list style="width: 150px;">
           <h4>Source</h4>
           <ion-select formControlName="source">
-            <ion-select-option *ngFor="let index of indexes">{{index.valueOf()}}
-              <!-- *ngFor der loader alle currencies -->
+            <ion-select-option
+              *ngFor="let index of indexes"
+              [value]="index.iso">
+              {{ index.iso }}
             </ion-select-option>
           </ion-select>
         </ion-list>
@@ -22,8 +24,10 @@
         <ion-list style="width: 150px;">
           <h4>Target</h4>
           <ion-select formControlName="target">
-            <ion-select-option *ngFor="let index of indexes">{{index.valueOf()}}
-              <!-- *ngFor der loader alle currencies -->
+            <ion-select-option
+              *ngFor="let index of indexes"
+              [value]="index.iso">
+              {{ index.iso }}
             </ion-select-option>
           </ion-select>
         </ion-list>
@@ -33,12 +37,13 @@
           <ion-input type="number" formControlName="value"></ion-input>
         </ion-list>
 
-        <ion-button style="width: 80px; height: 40px;" [disabled]="form.invalid" (click)="convert()">Convert</ion-button>
+        <ion-button style="width: 80px; height: 40px;" [disabled]="form.invalid" (click)="convert()">Convert
+        </ion-button>
 
       </ion-item>
     </div>
   </form>
   <h2 style="text-align: center" *ngIf="result">
-    {{Number(value.value)}} {{source.value}} is {{Number(result)}} {{target.value}}[USD?]
+    {{ Number(value.value) }} {{ source }} is {{ Number(result) }} {{ target }}
   </h2>
 </ion-content>
