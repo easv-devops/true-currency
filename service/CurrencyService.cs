@@ -18,5 +18,11 @@ public class CurrencyService
     {
         return _repo.GetAllCurrencies();
     }
-    
+
+    public List<HistoryDto> GetAllHistory()
+    {
+        return _repo.GetAllHistory();
+    }
+
+
 }
