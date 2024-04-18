@@ -33,7 +33,7 @@ export class Service {
   async isFeatureEnabled(FEATURE_KEY: string) {
     const edgeUrl = 'http://4.231.252.47:8085/'; // for SaaS version, replace with edge URL provided in the API Keys page
     //TODO: Hide apiKey
-    const apiKey = '5c0f0b36-21ed-4da1-bb6c-2ef1316ea865/J3tcF5V9eHZBwrw9IVgOaHMTDthmnCZi6claDzSw';
+    const apiKey = '9473b90e-f482-4a88-b588-9f78ad687e39/6CjxEB3lrojdOqYWMU3md9vy03iH1qOyxucP1TvS';
 
     const fhConfig = new EdgeFeatureHubConfig(edgeUrl, apiKey);
 

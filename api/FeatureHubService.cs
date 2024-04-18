@@ -9,7 +9,7 @@ public class FeatureHubService
     public FeatureHubService()
     {
         _config = new EdgeFeatureHubConfig("http://featurehub:8085",
-            "5c0f0b36-21ed-4da1-bb6c-2ef1316ea865/J3tcF5V9eHZBwrw9IVgOaHMTDthmnCZi6claDzSw");
+            "9473b90e-f482-4a88-b588-9f78ad687e39/6CjxEB3lrojdOqYWMU3md9vy03iH1qOyxucP1TvS");
     }
 
     public async Task<bool> IsFeatureEnabled(string featureKey)
