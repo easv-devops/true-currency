@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
-import {Currency, Service} from "./service";
-import {find} from "rxjs";
+import {Currency, CurrencyHistory, Service} from "./service";
 
 @Component({
   selector: 'app-home',
@@ -12,14 +11,18 @@ export class HomePage implements OnInit {
   protected readonly Number = Number;
   result?: number;
   indexes?: Currency[];
+  cHistory?: CurrencyHistory[];
+  isHistoryEnabled: boolean | undefined;
 
   constructor(private readonly fb: FormBuilder,
               private readonly service: Service) {
   }
 
   async ngOnInit() {
-        this.indexes = await this.service.getCurrencies();
-    }
+    this.indexes = await this.service.getCurrencies();
+    this.isHistoryEnabled = await this.service.isFeatureEnabled('History');
+    if(this.isHistoryEnabled) this.cHistory = await this.service.getHistory();
+  }
 
   form = this.fb.group({
     source: ['', Validators.required],
@@ -48,16 +51,41 @@ export class HomePage implements OnInit {
     var targetRateToUsd;
 
     for (const c of this.indexes!) {
-      if(c.iso == source) {
+      if (c.iso == source) {
         sourceRateToUsd = c.rateToUsd;
       }
-      if(c.iso == target) {
+      if (c.iso == target) {
         targetRateToUsd = c.rateToUsd;
       }
     }
 
     // @ts-ignore
     this.result = value?.valueOf() / sourceRateToUsd * targetRateToUsd;
+  }
 
+  createHistory() {
+    const source = this.source;
+    const target = this.target;
+    const value = this.value;
+
+    // Find ISO values for source and target currencies
+    const sourceCurrency = this.indexes?.find(c => c.iso === source);
+    const targetCurrency = this.indexes?.find(c => c.iso === target);
+
+    if (!sourceCurrency || !targetCurrency) {
+      console.error('Source or target currency not found');
+      return;
+    }
+
+    const historyRecord: CurrencyHistory = {
+      date: new Date(),
+      source: sourceCurrency.iso,
+      target: targetCurrency.iso,
+      value: Number(this.form.controls.value.value),
+      result: this.result ? Number(this.result) : 0
+    };
+    this.cHistory?.push(historyRecord)
+    this.service.createHistory(historyRecord);
   }
 }
+

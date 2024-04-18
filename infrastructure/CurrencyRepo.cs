@@ -32,4 +32,45 @@ SELECT iso, value AS `RateToUsd` FROM Currency;";
             }
         }
     }
+    
+    
+    
+    public int AddHistory(HistoryDto historyRecord)
+    {
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            const string sql = @"
+INSERT INTO History (Date, Source, Target, Value, Result)
+VALUES (@Date, @Source, @Target, @Value, @Result);
+SELECT LAST_INSERT_ID();";
+
+            try
+            {
+                connection.Open();
+                int insertedId = connection.QueryFirstOrDefault<int>(sql, historyRecord);
+                return insertedId;
+            }
+            catch (Exception ex)
+            {
+                throw new SqlTypeException("Failed to add history record", ex);
+            }
+        }
+    }
+    public List<HistoryDto> GetAllHistory()
+    {
+        using (var connection = new MySqlConnection(_connectionString))
+        {
+            const string sql = "SELECT Date, Source, Target, Value, Result FROM History";
+            try
+            {
+                connection.Open();
+                var history = connection.Query<HistoryDto>(sql).ToList();
+                return history;
+            }
+            catch (Exception ex)
+            {
+                throw new SqlTypeException("Failed to fetch history", ex);
+            }
+        }
+    }
 }

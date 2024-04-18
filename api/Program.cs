@@ -1,3 +1,4 @@
+using api;
 using infrastructure;
 using service;
 
@@ -20,6 +21,7 @@ builder.Services.AddSingleton(provider => Utilities.MySqlConnectionString);
 builder.Services.AddSingleton(provider => new CurrencyRepo(provider.GetRequiredService<string>()));
 
 builder.Services.AddSingleton<CurrencyService>();
+builder.Services.AddSingleton<FeatureHubService>();
 
 builder.Services.AddCors(options =>
 {

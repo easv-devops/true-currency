@@ -1,5 +1,4 @@
-﻿
--- Opret History-tabel
+﻿-- Opret History-tabel
 CREATE TABLE History (
         Id INT AUTO_INCREMENT PRIMARY KEY,
         Date DATETIME NOT NULL,
