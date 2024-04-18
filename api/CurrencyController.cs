@@ -22,4 +22,19 @@ public class CurrencyController: ControllerBase
     {
         return _service.GetAllCurrencies();
     }
+    
+    [HttpGet]
+    [Route("GetAllHistory")]
+    public List<HistoryDto> GetHistory()
+    {
+        return _service.GetAllHistory();
+    }
+    
+    [HttpPost]
+    [Route("CreateHistory")]
+    public bool PostHistory([FromBody] HistoryDto historyDto)
+    {
+        _service.AddHistory(historyDto);
+        return true;
+    }
 }

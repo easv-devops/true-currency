@@ -35,18 +35,20 @@ SELECT iso, value AS `RateToUsd` FROM Currency;";
     
     
     
-    public void AddHistory(HistoryDto historyRecord)
+    public int AddHistory(HistoryDto historyRecord)
     {
         using (var connection = new MySqlConnection(_connectionString))
         {
             const string sql = @"
 INSERT INTO History (Date, Source, Target, Value, Result)
-VALUES (@Date, @Source, @Target, @Value, @Result);";
-        
+VALUES (@Date, @Source, @Target, @Value, @Result);
+SELECT LAST_INSERT_ID();";
+
             try
             {
                 connection.Open();
-                connection.Execute(sql, historyRecord);
+                int insertedId = connection.QueryFirstOrDefault<int>(sql, historyRecord);
+                return insertedId;
             }
             catch (Exception ex)
             {
@@ -54,7 +56,6 @@ VALUES (@Date, @Source, @Target, @Value, @Result);";
             }
         }
     }
-    
     public List<HistoryDto> GetAllHistory()
     {
         using (var connection = new MySqlConnection(_connectionString))
