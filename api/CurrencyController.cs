@@ -26,4 +26,20 @@ public class CurrencyController: ControllerBase
         MonitorService.Log.Warning(logType + ": This method will return all currencies :D");
         return _service.GetAllCurrencies();
     }
+    
+    [HttpGet]
+    [Route("GetAllHistory")]
+    public List<HistoryDto> GetHistory()
+    {
+        return _service.GetAllHistory();
+    }
+    
+    [HttpPost]
+    [Route("CreateHistory")]
+    public bool PostHistory([FromBody] HistoryDto historyDto)
+    {
+        Console.Write(historyDto.Result);
+        _service.AddHistory(historyDto);
+        return true;
+    }
 }

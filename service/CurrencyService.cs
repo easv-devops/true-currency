@@ -18,5 +18,19 @@ public class CurrencyService
     {
         return _repo.GetAllCurrencies();
     }
-    
+
+    public List<HistoryDto> GetAllHistory()
+    {
+        return _repo.GetAllHistory();
+    }
+
+    public void AddHistory(HistoryDto history)
+    {
+       int id = _repo.AddHistory(history);
+       if (id <= 0)
+       {
+           throw new Exception("did not create history");
+       }
+    }
+
 }

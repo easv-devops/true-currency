@@ -1,17 +1,28 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
+import {Currency, CurrencyHistory, Service} from "./service";
+import {find} from "rxjs";
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   protected readonly Number = Number;
   result?: number;
-  indexes?: number[] = [1, 0.93];
+  indexes?: Currency[];
+  cHistory?: CurrencyHistory[];
 
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(private readonly fb: FormBuilder,
+              private readonly service: Service) {
+  }
+
+  async ngOnInit() {
+        this.indexes = await this.service.getCurrencies();
+    this.cHistory = await this.service.getHistory();
+    console.log(this.cHistory[0])
+    }
 
   form = this.fb.group({
     source: ['', Validators.required],
@@ -20,11 +31,11 @@ export class HomePage {
   });
 
   get source() {
-    return this.form.controls.source;
+    return this.form.controls.source.value;
   }
 
   get target() {
-    return this.form.controls.target;
+    return this.form.controls.target.value;
   }
 
   get value() {
@@ -36,10 +47,46 @@ export class HomePage {
     var target = this.form.controls.target.value;
     var value = this.form.controls.value.value;
 
-    // @ts-ignore
-    this.result = value?.valueOf() / source?.valueOf() * target?.valueOf();
+    var sourceRateToUsd;
+    var targetRateToUsd;
 
-    console.log(value + ' / ' + source + ' * ' + target + ' = ')
-    console.log(this.result)
+    for (const c of this.indexes!) {
+      if(c.iso == source) {
+        sourceRateToUsd = c.rateToUsd;
+      }
+      if(c.iso == target) {
+        targetRateToUsd = c.rateToUsd;
+      }
+    }
+
+    // @ts-ignore
+    this.result = value?.valueOf() / sourceRateToUsd * targetRateToUsd;
+  }
+
+  createHistory() {
+    console.log("fnuweinfw")
+
+    const source = this.source;
+    const target = this.target;
+    const value = this.value;
+
+    // Find ISO values for source and target currencies
+    const sourceCurrency = this.indexes?.find(c => c.iso === source);
+    const targetCurrency = this.indexes?.find(c => c.iso === target);
+
+    if (!sourceCurrency || !targetCurrency) {
+      console.error('Source or target currency not found');
+      return;
+    }
+
+    const historyRecord: CurrencyHistory = {
+      date: new Date(),
+      source: sourceCurrency.iso,
+      target: targetCurrency.iso,
+      value: Number(this.form.controls.value.value),
+      result: this.result ? Number(this.result) : 0
+    };
+    this.cHistory?.push(historyRecord)
+      this.service.createHistory(historyRecord);
   }
 }

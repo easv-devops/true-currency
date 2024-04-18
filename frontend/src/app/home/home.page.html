@@ -13,8 +13,10 @@
         <ion-list style="width: 150px;">
           <h4>Source</h4>
           <ion-select formControlName="source">
-            <ion-select-option *ngFor="let index of indexes">{{index.valueOf()}}
-              <!-- *ngFor der loader alle currencies -->
+            <ion-select-option
+              *ngFor="let index of indexes"
+              [value]="index.iso">
+              {{ index.iso }}
             </ion-select-option>
           </ion-select>
         </ion-list>
@@ -22,8 +24,10 @@
         <ion-list style="width: 150px;">
           <h4>Target</h4>
           <ion-select formControlName="target">
-            <ion-select-option *ngFor="let index of indexes">{{index.valueOf()}}
-              <!-- *ngFor der loader alle currencies -->
+            <ion-select-option
+              *ngFor="let index of indexes"
+              [value]="index.iso">
+              {{ index.iso }}
             </ion-select-option>
           </ion-select>
         </ion-list>
@@ -33,12 +37,41 @@
           <ion-input type="number" formControlName="value"></ion-input>
         </ion-list>
 
-        <ion-button style="width: 80px; height: 40px;" [disabled]="form.invalid" (click)="convert()">Convert</ion-button>
+        <ion-button style="width: 80px; height: 40px;" [disabled]="form.invalid" (click)="convert(); createHistory()">Convert
+        </ion-button>
 
       </ion-item>
     </div>
   </form>
   <h2 style="text-align: center" *ngIf="result">
-    {{Number(value.value)}} {{source.value}} is {{Number(result)}} {{target.value}}[USD?]
+    {{ Number(value.value) }} {{ source }} is {{ Number(result) }} {{ target }}
   </h2>
+
+  <h1 style="text-align: center">History</h1>
+
+  <div style="display: flex; justify-content: center;">
+
+    <table style="width: 80%; border-collapse: collapse; margin-top: 20px;">
+      <thead>
+      <tr style="background-color: #f2f2f2;">
+        <th style="padding: 10px; border: 1px solid #ddd;">Date</th>
+        <th style="padding: 10px; border: 1px solid #ddd;">Source</th>
+        <th style="padding: 10px; border: 1px solid #ddd;">Target</th>
+        <th style="padding: 10px; border: 1px solid #ddd;">Value</th>
+        <th style="padding: 10px; border: 1px solid #ddd;">Result</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let history of cHistory" style="border: 1px solid #ddd;">
+        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">{{ history.date | date }}</td>
+        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">{{ history.source }}</td>
+        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">{{ history.target }}</td>
+        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">{{ history.value }}</td>
+        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">{{ history.result }}</td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+
 </ion-content>
