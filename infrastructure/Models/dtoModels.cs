@@ -6,7 +6,6 @@ public class Currency
     public decimal RateToUsd { get; set; }
 }
 
-
 public class HistoryDto
 {
     public DateTime Date { get; set; }
