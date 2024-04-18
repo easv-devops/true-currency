@@ -1,17 +1,25 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
+import {Currency, Service} from "./service";
+import {find} from "rxjs";
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
   protected readonly Number = Number;
   result?: number;
-  indexes?: number[] = [1, 0.93];
+  indexes?: Currency[];
 
-  constructor(private readonly fb: FormBuilder) {}
+  constructor(private readonly fb: FormBuilder,
+              private readonly service: Service) {
+  }
+
+  async ngOnInit() {
+        this.indexes = await this.service.getCurrencies();
+    }
 
   form = this.fb.group({
     source: ['', Validators.required],
@@ -20,11 +28,11 @@ export class HomePage {
   });
 
   get source() {
-    return this.form.controls.source;
+    return this.form.controls.source.value;
   }
 
   get target() {
-    return this.form.controls.target;
+    return this.form.controls.target.value;
   }
 
   get value() {
@@ -36,10 +44,20 @@ export class HomePage {
     var target = this.form.controls.target.value;
     var value = this.form.controls.value.value;
 
-    // @ts-ignore
-    this.result = value?.valueOf() / source?.valueOf() * target?.valueOf();
+    var sourceRateToUsd;
+    var targetRateToUsd;
 
-    console.log(value + ' / ' + source + ' * ' + target + ' = ')
-    console.log(this.result)
+    for (const c of this.indexes!) {
+      if(c.iso == source) {
+        sourceRateToUsd = c.rateToUsd;
+      }
+      if(c.iso == target) {
+        targetRateToUsd = c.rateToUsd;
+      }
+    }
+
+    // @ts-ignore
+    this.result = value?.valueOf() / sourceRateToUsd * targetRateToUsd;
+
   }
 }
