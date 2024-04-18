@@ -1,4 +1,5 @@
 ﻿using infrastructure.Models;
+using infrastructure.monitoring;
 using Microsoft.AspNetCore.Mvc;
 using service;
 
@@ -20,6 +21,9 @@ public class CurrencyController: ControllerBase
     [Route("GetAll")]
     public List<Currency> Get()
     {
+        var logType = "Warning";
+        
+        MonitorService.Log.Warning(logType + ": This method will return all currencies :D");
         return _service.GetAllCurrencies();
     }
 }

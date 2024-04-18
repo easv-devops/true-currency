@@ -1,4 +1,5 @@
 using infrastructure;
+using Serilog;
 using service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +36,8 @@ app.UseHttpsRedirection();
 
 
 app.MapControllers();
+
+Log.CloseAndFlush();
 
 app.Run();
 
