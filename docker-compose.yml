@@ -1,9 +1,6 @@
 services:
   currency-frontend:
-    build: 
-      context: .
-      dockerfile: frontend/Dockerfile
-    #image: midr/true-currency-frontend:staging
+    image: midr/true-currency-frontend:staging
     ports:
       - "5001:80"
     labels:
@@ -13,9 +10,7 @@ services:
       - currency-api
   
   currency-api:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: midr/true-currency-api:staging
     entrypoint: ["dotnet", "api.dll"]
     ports:
       - "5002:8080"
