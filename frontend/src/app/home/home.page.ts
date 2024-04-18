@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
-import {Currency, Service} from "./service";
+import {Currency, CurrencyHistory, Service} from "./service";
 import {find} from "rxjs";
 
 @Component({
@@ -12,6 +12,7 @@ export class HomePage implements OnInit {
   protected readonly Number = Number;
   result?: number;
   indexes?: Currency[];
+  cHistory?: CurrencyHistory[];
 
   constructor(private readonly fb: FormBuilder,
               private readonly service: Service) {
@@ -19,6 +20,8 @@ export class HomePage implements OnInit {
 
   async ngOnInit() {
         this.indexes = await this.service.getCurrencies();
+    this.cHistory = await this.service.getHistory();
+    console.log(this.cHistory[0])
     }
 
   form = this.fb.group({
@@ -58,6 +61,32 @@ export class HomePage implements OnInit {
 
     // @ts-ignore
     this.result = value?.valueOf() / sourceRateToUsd * targetRateToUsd;
+  }
 
+  createHistory() {
+    console.log("fnuweinfw")
+
+    const source = this.source;
+    const target = this.target;
+    const value = this.value;
+
+    // Find ISO values for source and target currencies
+    const sourceCurrency = this.indexes?.find(c => c.iso === source);
+    const targetCurrency = this.indexes?.find(c => c.iso === target);
+
+    if (!sourceCurrency || !targetCurrency) {
+      console.error('Source or target currency not found');
+      return;
+    }
+
+    const historyRecord: CurrencyHistory = {
+      date: new Date(),
+      source: sourceCurrency.iso,
+      target: targetCurrency.iso,
+      value: Number(this.form.controls.value.value),
+      result: this.result ? Number(this.result) : 0
+    };
+    this.cHistory?.push(historyRecord)
+      this.service.createHistory(historyRecord);
   }
 }

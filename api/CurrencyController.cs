@@ -34,6 +34,7 @@ public class CurrencyController: ControllerBase
     [Route("CreateHistory")]
     public bool PostHistory([FromBody] HistoryDto historyDto)
     {
+        Console.Write(historyDto.Result);
         _service.AddHistory(historyDto);
         return true;
     }
