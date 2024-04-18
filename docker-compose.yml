@@ -13,7 +13,9 @@ services:
       - currency-api
   
   currency-api:
-    image: midr/true-currency-api:staging
+    build:
+      context: .
+      dockerfile: Dockerfile
     entrypoint: ["dotnet", "api.dll"]
     ports:
       - "5002:8080"
@@ -47,6 +49,15 @@ services:
       - "com.centurylinklabs.watchtower.enable=false"
     ports:
       - 8080:8080
+  
+  featurehub:
+    image: featurehub/party-server:latest
+    restart: always
+    volumes:
+      - featurehub-h2-data:/db
+    ports: 
+      - 8085:8085
 
 volumes:
   mariadb:
+  featurehub-h2-data: 

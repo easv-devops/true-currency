@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {Currency, CurrencyHistory, Service} from "./service";
-import {find} from "rxjs";
 
 @Component({
   selector: 'app-home',

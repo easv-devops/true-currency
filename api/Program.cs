@@ -1,3 +1,4 @@
+using FeatureHubSDK;
 using infrastructure;
 using service;
 
@@ -45,6 +46,17 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowAll");
 
 app.MapControllers();
+
+FeatureLogging.DebugLogger += (sender, s) => Console.WriteLine("DEBUG: " + s);
+FeatureLogging.TraceLogger += (sender, s) => Console.WriteLine("TRACE: " + s);
+FeatureLogging.InfoLogger += (sender, s) => Console.WriteLine("INFO: " + s);
+FeatureLogging.ErrorLogger += (sender, s) => Console.WriteLine("ERROR: " + s);
+
+var config = new EdgeFeatureHubConfig("http://featurehub:8085",
+    "5c0f0b36-21ed-4da1-bb6c-2ef1316ea865/J3tcF5V9eHZBwrw9IVgOaHMTDthmnCZi6claDzSw");
+var fh = await config.NewContext().Build();
+
+Console.WriteLine(fh["History"].IsEnabled);
 
 app.Run();
 
