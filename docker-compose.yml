@@ -12,7 +12,7 @@ services:
   currency-api:
     image: midr/true-currency-api:staging
     env_file:
-      - .env
+      - ./.env
     entrypoint: ["dotnet", "api.dll"]
     ports:
       - "5002:8080"
