@@ -1,5 +1,6 @@
 using api;
 using infrastructure;
+using Microsoft.EntityFrameworkCore;
 using service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -17,9 +18,9 @@ builder.Services.AddNpgsqlDataSource(Utilities.MySqlConnectionString,
 //gets connection string to db
 builder.Services.AddSingleton(provider => Utilities.MySqlConnectionString);
 
+Console.WriteLine("currency_conn="+Utilities.MySqlConnectionString);
 
-builder.Services.AddSingleton(provider => new CurrencyRepo(provider.GetRequiredService<string>()));
-
+builder.Services.AddSingleton<CurrencyRepo>();
 builder.Services.AddSingleton<CurrencyService>();
 builder.Services.AddSingleton<FeatureHubService>();
 
@@ -37,6 +38,8 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+app.UseCors("AllowAll");
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
@@ -44,9 +47,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseCors("AllowAll");
+app.UseHttpsRedirection();
 
 app.MapControllers();
 
 app.Run();
-

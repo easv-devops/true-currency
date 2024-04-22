@@ -1,3 +1,4 @@
+DELETE FROM History;
 DELETE FROM Currency;
 INSERT INTO Currency (iso, value)
 VALUES
