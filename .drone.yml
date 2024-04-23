@@ -14,7 +14,7 @@ steps:
     environment:
       SONARSECRET:
         from_secret: SonarQubeSecret
-      currency-conn:
+      currencyconn:
         from_secret: currencyconn
     commands:
       - dotnet sonarscanner begin 
