@@ -90,6 +90,8 @@ steps:
   - name: performance tests
     image: grafana/k6
     commands:
-      - k6 run tests/performance/*.js
+      - k6 run tests/performance/load.js
+      - k6 run tests/performance/spike.js
+      - k6 run tests/performance/stress.js
     depends_on:
       - update database
