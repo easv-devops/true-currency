@@ -19,7 +19,7 @@ services:
     labels:
       - "com.centurylinklabs.watchtower.enable=true"
     environment:
-      currency_conn: ${currency_conn}
+      currency_conn: ${currency-conn}
 
   mariadb:
     image: mariadb:latest

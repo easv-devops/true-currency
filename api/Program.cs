@@ -1,54 +1,22 @@
-using api;
-using infrastructure;
-using Microsoft.EntityFrameworkCore;
-using service;
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddControllers();
-builder.Services.AddSwaggerGen();
-
-//saves connection string
-builder.Services.AddNpgsqlDataSource(Utilities.MySqlConnectionString, 
-    dataSourceBuilder => dataSourceBuilder.EnableParameterLogging());
-
-//gets connection string to db
-builder.Services.AddSingleton(provider => Utilities.MySqlConnectionString);
-
-Console.WriteLine("currency_conn="+Utilities.MySqlConnectionString);
-
-builder.Services.AddSingleton<CurrencyRepo>();
-builder.Services.AddSingleton<CurrencyService>();
-builder.Services.AddSingleton<FeatureHubService>();
-
-builder.Services.AddCors(options =>
+string secretName = "currency-conn";
+string keyVaultName = "currency";
+var kvUri = "https://currency.vault.azure.net/";
+SecretClientOptions options = new SecretClientOptions()
 {
-    options.AddPolicy("AllowAll",
-        builder =>
-        {
-            builder
-                .AllowAnyOrigin()
-                .AllowAnyMethod()
-                .AllowAnyHeader();
-        });
-});
+    Retry =
+    {
+        Delay= TimeSpan.FromSeconds(2),
+        MaxDelay = TimeSpan.FromSeconds(16),
+        MaxRetries = 5,
+        Mode = RetryMode.Exponential
+    }
+};
 
-var app = builder.Build();
+var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential(),options);
 
-app.UseCors("AllowAll");
+Console.WriteLine(client.GetSecret(secretName));
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
-
-app.UseHttpsRedirection();
-
-app.MapControllers();
-
-app.Run();

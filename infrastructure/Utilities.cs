@@ -3,5 +3,5 @@ public static class Utilities
 {
    
     public static readonly string
-        MySqlConnectionString = Environment.GetEnvironmentVariable("currency_conn");
+        MySqlConnectionString = Environment.GetEnvironmentVariable("currency-conn");
 }
