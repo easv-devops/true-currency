@@ -14,22 +14,32 @@ builder.Services.AddSwaggerGen();
 //saves connection string
 builder.Services.AddNpgsqlDataSource(Utilities.MySqlConnectionString, 
     dataSourceBuilder => dataSourceBuilder.EnableParameterLogging());
-var connString = new SecretService().GetSecret();
-if (ReferenceEquals(connString, null))
+
+try
 {
-    //gets connection string to db
-    builder.Services.AddSingleton(provider => Utilities.MySqlConnectionString);
+    var connString = new SecretService().GetSecret();
+    if (string.IsNullOrEmpty(connString))
+    {
+        // Azure Key Vault is not accessible or returned an empty string, use a default connection string
+        connString = Utilities.MySqlConnectionString;
+    }
+
+    // Register the retrieved or default connection string as a singleton service
+    builder.Services.AddSingleton(provider => connString);
 }
-else
+catch (Exception ex)
 {
-    //gets connection string to db
+    // Log the exception or handle it as per your application's error handling strategy
+    Console.WriteLine($"Error occurred while retrieving connection string from Azure Key Vault: {ex.Message}");
+
+    // Use a default connection string as a fallback
+    var connString = Utilities.MySqlConnectionString;
+
+    // Register the default connection string as a singleton service
     builder.Services.AddSingleton(provider => connString);
 }
 
-Console.WriteLine("currency-conn fra Util "+Utilities.MySqlConnectionString);
-Console.WriteLine("currency-conn fra Azure Key Vault "+connString);
-
-builder.Services.AddSingleton(provider => new CurrencyRepo(provider.GetRequiredService<string>()));
+builder.Services.AddSingleton<CurrencyRepo>();
 builder.Services.AddSingleton<CurrencyService>();
 builder.Services.AddSingleton<FeatureHubService>();
 
