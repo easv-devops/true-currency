@@ -12,7 +12,6 @@ public class CreateHistory
       
     private CurrencyRepo _currencyRepo;
     private CurrencyService _currencyService;
-    private CurrencyController _currencyController;
     
     [SetUp]
     public void Setup()
@@ -20,14 +19,13 @@ public class CreateHistory
         // Arrange
         _currencyRepo = new CurrencyRepo(Utilities.MySqlConnectionString);
         _currencyService = new CurrencyService(_currencyRepo);
-        _currencyController = new CurrencyController(_currencyService);
     }
     
     [Test]
     public void GetAllHistories_ShouldReturnListOfHistory()
     {
         // Act
-         _currencyController.PostHistory(new HistoryDto
+         _currencyService.AddHistory(new HistoryDto
          {
              Date = DateTime.Now,
              Source = "EUR",
@@ -36,7 +34,7 @@ public class CreateHistory
              Result = 1000
          });
 
-         var responseList = _currencyController.GetHistory();
+         var responseList = _currencyService.GetAllHistory();
 
 
         // Assert

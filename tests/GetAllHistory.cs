@@ -5,12 +5,13 @@ using infrastructure;
 using infrastructure.Models;
 using service;
 
+namespace tests;
+
 public class GetAllHistory
 {
     
     private CurrencyRepo _currencyRepo;
     private CurrencyService _currencyService;
-    private CurrencyController _currencyController;
     
     [SetUp]
     public void Setup()
@@ -18,14 +19,13 @@ public class GetAllHistory
         // Arrange
         _currencyRepo = new CurrencyRepo(Utilities.MySqlConnectionString);
         _currencyService = new CurrencyService(_currencyRepo);
-        _currencyController = new CurrencyController(_currencyService);
     }
     
     [Test]
     public void GetAllHistories_ShouldReturnListOfHistory()
     {
         // Act
-        List<HistoryDto> responseList = _currencyController.GetHistory();
+        List<HistoryDto> responseList = _currencyService.GetAllHistory();
 
 
         // Assert
