@@ -29,7 +29,7 @@ else
 Console.WriteLine("currency-conn fra Util "+Utilities.MySqlConnectionString);
 Console.WriteLine("currency-conn fra Azure Key Vault "+connString);
 
-builder.Services.AddSingleton<CurrencyRepo>();
+builder.Services.AddSingleton(provider => new CurrencyRepo(provider.GetRequiredService<string>()));
 builder.Services.AddSingleton<CurrencyService>();
 builder.Services.AddSingleton<FeatureHubService>();
 
