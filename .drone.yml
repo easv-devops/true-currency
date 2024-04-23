@@ -14,6 +14,8 @@ steps:
     environment:
       SONARSECRET:
         from_secret: SonarQubeSecret
+      currency-conn:
+        from_secret: currency-conn
     commands:
       - dotnet sonarscanner begin 
           /k:"easv-devops_true-currency_AY7MMu9tEVvRW2O60EmC" 
