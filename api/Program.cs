@@ -1,25 +1,63 @@
-using Azure.Core;
-using Azure.Identity;
-using Azure.Security.KeyVault.Secrets;
+using api;
+using infrastructure;
+using Microsoft.EntityFrameworkCore;
+using service;
 
-string secretName = "currency-conn";
-string keyVaultName = "currency";
-var kvUri = "https://currency.vault.azure.net/";
-SecretClientOptions options = new SecretClientOptions()
+var builder = WebApplication.CreateBuilder(args);
+
+// Add services to the container.
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddControllers();
+builder.Services.AddSwaggerGen();
+
+//saves connection string
+builder.Services.AddNpgsqlDataSource(Utilities.MySqlConnectionString, 
+    dataSourceBuilder => dataSourceBuilder.EnableParameterLogging());
+var connString = new SecretService().GetSecret();
+if (ReferenceEquals(connString, null))
 {
-    Retry =
-    {
-        Delay= TimeSpan.FromSeconds(2),
-        MaxDelay = TimeSpan.FromSeconds(16),
-        MaxRetries = 5,
-        Mode = RetryMode.Exponential
-    }
-};
+    //gets connection string to db
+    builder.Services.AddSingleton(provider => Utilities.MySqlConnectionString);
+}
+else
+{
+    //gets connection string to db
+    builder.Services.AddSingleton(provider => connString);
+}
 
-var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential(),options);
+Console.WriteLine("currency-conn fra Util "+Utilities.MySqlConnectionString);
+Console.WriteLine("currency-conn fra Azure Key Vault "+connString);
 
-KeyVaultSecret secret = client.GetSecret(secretName);
-System.Threading.Thread.Sleep(5000);
-Console.WriteLine(secret.Value);
-Console.WriteLine(" done.");
+builder.Services.AddSingleton<CurrencyRepo>();
+builder.Services.AddSingleton<CurrencyService>();
+builder.Services.AddSingleton<FeatureHubService>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll",
+        builder =>
+        {
+            builder
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader();
+        });
+});
+
+var app = builder.Build();
+
+app.UseCors("AllowAll");
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseSwagger();
+    app.UseSwaggerUI();
+}
+
+app.UseHttpsRedirection();
+
+app.MapControllers();
+
+app.Run();
