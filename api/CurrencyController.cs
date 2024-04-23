@@ -32,7 +32,7 @@ public class CurrencyController: ControllerBase
         var isHistoryEnabled = await _fhService.IsFeatureEnabled("History");
         if (!isHistoryEnabled)
         {
-            return null; //TODO: Errorhandling
+            return [];
         }
         return _service.GetAllHistory();
     }

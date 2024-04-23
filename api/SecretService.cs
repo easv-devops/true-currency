@@ -9,7 +9,6 @@ public class SecretService
     public string GetSecret()
     {
         string secretName = "currency-conn";
-        string keyVaultName = "currency";
         var kvUri = "https://currency.vault.azure.net/";
         SecretClientOptions options = new SecretClientOptions()
         {
