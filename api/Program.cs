@@ -15,9 +15,10 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddNpgsqlDataSource(Utilities.MySqlConnectionString, 
     dataSourceBuilder => dataSourceBuilder.EnableParameterLogging());
 
+var connString = "";
 try
 {
-    var connString = new SecretService().GetSecret();
+    connString = new SecretService().GetSecret();
     if (string.IsNullOrEmpty(connString))
     {
         // Azure Key Vault is not accessible or returned an empty string, use a default connection string
@@ -33,7 +34,7 @@ catch (Exception ex)
     Console.WriteLine($"Error occurred while retrieving connection string from Azure Key Vault: {ex.Message}");
 
     // Use a default connection string as a fallback
-    var connString = Utilities.MySqlConnectionString;
+    connString = Utilities.MySqlConnectionString;
 
     // Register the default connection string as a singleton service
     builder.Services.AddSingleton(provider => connString);
