@@ -44,7 +44,7 @@ public class CurrencyController: ControllerBase
         var isHistoryEnabled = await _fhService.IsFeatureEnabled("History");
         if (!isHistoryEnabled)
         {
-            return false; //TODO: Errorhandling
+            return false;
         }
         Console.Write(historyDto.Result);
         _service.AddHistory(historyDto);
