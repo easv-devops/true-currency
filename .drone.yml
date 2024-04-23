@@ -15,7 +15,7 @@ steps:
       SONARSECRET:
         from_secret: SonarQubeSecret
       currency-conn:
-        from_secret: currency-conn
+        from_secret: currencyconn
     commands:
       - dotnet sonarscanner begin 
           /k:"easv-devops_true-currency_AY7MMu9tEVvRW2O60EmC" 
@@ -23,8 +23,8 @@ steps:
           /d:sonar.token="$SONARSECRET"
           /d:sonar.cs.vscoveragexml.reportsPaths=coverage.xml
           /d:sonar.qualitygate.wait=true
-      - export currency-conn="$currency-conn"
-      - dotnet build api/api.csproj --no-incremental /p:currency-conn=$currency-conn
+      - export currencyconn="$currencyconn"
+      - dotnet build api/api.csproj --no-incremental /p:currencyconn=$currencyconn
       - dotnet-coverage collect "dotnet test tests/tests.csproj" -f xml -o "coverage.xml"
       - dotnet sonarscanner end /d:sonar.token="$SONARSECRET"
 
