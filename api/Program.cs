@@ -18,5 +18,8 @@ SecretClientOptions options = new SecretClientOptions()
 
 var client = new SecretClient(new Uri(kvUri), new DefaultAzureCredential(),options);
 
-Console.WriteLine(client.GetSecret(secretName).Value);
+KeyVaultSecret secret = client.GetSecret(secretName);
+System.Threading.Thread.Sleep(5000);
+Console.WriteLine(secret.Value);
+Console.WriteLine(" done.");
 
