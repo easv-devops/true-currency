@@ -31,5 +31,5 @@ export let options = {
 };
 
 export default function () {
-    http.get("http://4.231.252.47:5002/WeatherForecast");
+    http.get("http://4.231.252.47:5002/Currency/GetAll");
 }

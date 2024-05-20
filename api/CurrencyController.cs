@@ -11,10 +11,12 @@ public class CurrencyController: ControllerBase
 {
 
     private readonly CurrencyService _service;
+    private readonly FeatureHubService _fhService;
     
-    public CurrencyController(CurrencyService service)
+    public CurrencyController(CurrencyService service, FeatureHubService fhService)
     {
         _service = service;
+        _fhService = fhService;
     }
     
     [HttpGet]
@@ -29,15 +31,25 @@ public class CurrencyController: ControllerBase
     
     [HttpGet]
     [Route("GetAllHistory")]
-    public List<HistoryDto> GetHistory()
+    public async Task<List<HistoryDto>> GetHistory()
     {
+        var isHistoryEnabled = await _fhService.IsFeatureEnabled("History");
+        if (!isHistoryEnabled)
+        {
+            return [];
+        }
         return _service.GetAllHistory();
     }
     
     [HttpPost]
     [Route("CreateHistory")]
-    public bool PostHistory([FromBody] HistoryDto historyDto)
+    public async Task<bool> PostHistory([FromBody] HistoryDto historyDto)
     {
+        var isHistoryEnabled = await _fhService.IsFeatureEnabled("History");
+        if (!isHistoryEnabled)
+        {
+            return false;
+        }
         Console.Write(historyDto.Result);
         _service.AddHistory(historyDto);
         return true;
