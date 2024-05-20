@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormBuilder, Validators} from "@angular/forms";
 import {Currency, CurrencyHistory, Service} from "./service";
+import {find} from "rxjs";
 
 @Component({
   selector: 'app-home',
@@ -12,17 +13,16 @@ export class HomePage implements OnInit {
   result?: number;
   indexes?: Currency[];
   cHistory?: CurrencyHistory[];
-  isHistoryEnabled: boolean | undefined;
 
   constructor(private readonly fb: FormBuilder,
               private readonly service: Service) {
   }
 
   async ngOnInit() {
-    this.indexes = await this.service.getCurrencies();
-    this.isHistoryEnabled = await this.service.isFeatureEnabled('History');
-    if(this.isHistoryEnabled) this.cHistory = await this.service.getHistory();
-  }
+        this.indexes = await this.service.getCurrencies();
+    this.cHistory = await this.service.getHistory();
+    console.log(this.cHistory[0])
+    }
 
   form = this.fb.group({
     source: ['', Validators.required],
@@ -51,10 +51,10 @@ export class HomePage implements OnInit {
     var targetRateToUsd;
 
     for (const c of this.indexes!) {
-      if (c.iso == source) {
+      if(c.iso == source) {
         sourceRateToUsd = c.rateToUsd;
       }
-      if (c.iso == target) {
+      if(c.iso == target) {
         targetRateToUsd = c.rateToUsd;
       }
     }
@@ -64,6 +64,8 @@ export class HomePage implements OnInit {
   }
 
   createHistory() {
+    console.log("fnuweinfw")
+
     const source = this.source;
     const target = this.target;
     const value = this.value;
@@ -85,7 +87,6 @@ export class HomePage implements OnInit {
       result: this.result ? Number(this.result) : 0
     };
     this.cHistory?.push(historyRecord)
-    this.service.createHistory(historyRecord);
+      this.service.createHistory(historyRecord);
   }
 }
-

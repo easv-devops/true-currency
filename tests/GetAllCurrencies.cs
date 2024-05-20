@@ -11,6 +11,7 @@ namespace tests
     {
         private CurrencyRepo _currencyRepo;
         private CurrencyService _currencyService;
+        private CurrencyController _currencyController;
 
         [SetUp]
         public void Setup()
@@ -18,13 +19,14 @@ namespace tests
             // Arrange
             _currencyRepo = new CurrencyRepo(Utilities.MySqlConnectionString);
             _currencyService = new CurrencyService(_currencyRepo);
+            _currencyController = new CurrencyController(_currencyService);
         }
 
         [Test]
         public void GetAllCurrencies_ShouldReturnListOfCurrencies()
         {
             // Act
-            List<Currency> responseList = _currencyService.GetAllCurrencies();
+            List<Currency> responseList = _currencyController.Get();
 
             // Print out the full list
             Console.WriteLine("Full list of currencies:");
