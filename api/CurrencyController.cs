@@ -23,9 +23,7 @@ public class CurrencyController: ControllerBase
     [Route("GetAll")]
     public List<Currency> Get()
     {
-        var logType = "Warning";
         
-        MonitorService.Log.Warning(logType + ": This method will return all currencies :D");
         return _service.GetAllCurrencies();
     }
     
@@ -36,7 +34,7 @@ public class CurrencyController: ControllerBase
         var isHistoryEnabled = await _fhService.IsFeatureEnabled("History");
         if (!isHistoryEnabled)
         {
-            return [];
+            return new List<HistoryDto>();
         }
         return _service.GetAllHistory();
     }
@@ -45,6 +43,10 @@ public class CurrencyController: ControllerBase
     [Route("CreateHistory")]
     public async Task<bool> PostHistory([FromBody] HistoryDto historyDto)
     {
+        var logType = "Warning";
+        
+        MonitorService.Log.Warning(logType + ": This method will create a history :D");
+        
         var isHistoryEnabled = await _fhService.IsFeatureEnabled("History");
         if (!isHistoryEnabled)
         {
